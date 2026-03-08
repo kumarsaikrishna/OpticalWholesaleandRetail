@@ -83,7 +83,7 @@ namespace Advocate_Invoceing.Controllers
                 // Redirect based on the user type
                 return result.userTypeName switch
                 {
-                    "Super Admin" => RedirectToAction("Index", "Home"),
+                    "Admin" => RedirectToAction("Index", "Home"),
                     "School Admin" => RedirectToAction("AdminDashboard", "Home"),
                     "Teacher" => RedirectToAction("TeacherDashboard", "Home")
                 };

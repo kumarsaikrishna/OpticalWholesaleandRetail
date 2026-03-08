@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using OpticalFibersRetailShop.Models.Entity;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace OpticalFibersRetailShop.DAL
 {
@@ -28,40 +30,40 @@ namespace OpticalFibersRetailShop.DAL
             LoginResponse lr = new LoginResponse();
             try
             {
+                var u = _context.userEntity.Where(a => a.Email == request.Uname).FirstOrDefault();
+                //var u = _context.userEntity.Where(a => a.IsDeleted == false && a.IsActive == true && a.Email == request.Uname).FirstOrDefault();
 
-                //        var u = _context.userEntity.Where(a => a.IsDeleted == false && a.IsActive == true && a.Email == request.Email).FirstOrDefault();
+                if (u == null)
+                {
+                    lr.statusCode = 0;
+                    lr.Message = "Please enter valid email";
+                    return lr;
+                }
+                else
+                {
+                    //var p = EncryptTool.Decrypt(u.PasswordHash);
+                    //if (request.Password == EncryptTool.Decrypt(u.PasswordHash))
+                    if(u.PasswordHash==request.Password)
+                    {
+                        lr.statusCode = 1;
+                        lr.Message = "success";
+                        lr.userTypeName = _context.uTypeEntity.Where(a => a.RoleId == u.RoleId).Select(b => b.RoleName).FirstOrDefault();
+                        lr.userName = u.FullName;
+                        lr.userId = u.UserId;
 
-                //        if (u == null)
-                //        {
-                //            lr.statusCode = 0;
-                //            lr.Message = "Please enter valid email";
-                //            return lr;
-                //        }
-                //        else
-                //        {
-                //            var p = EncryptTool.Decrypt(u.PasswordHash);
-                //            if (request.Password == EncryptTool.Decrypt(u.PasswordHash))
-                //            {
-                //                lr.statusCode = 1;
-                //                lr.Message = "success";
-                //                lr.userTypeName = _context.userTypeEntites.Where(a => a.UserTypeId == u.UserTypeId).Select(b => b.UserTypeName).FirstOrDefault();
-                //                lr.userName = u.FullName;
-                //                lr.userId = u.UserId;
-                //               lr.profileUrl = u.ProfilePicture == null ? "dummy.png" : u.ProfilePicture;
+                        // entry in lastlogin detials
 
-                //                // entry in lastlogin detials
-
-                //                lr.statusCode = 1;
-                //                lr.Message = "Login success";
-                //                return lr;
-                //            }
-                //            else
-                //            {
-                //                lr.statusCode = 0;
-                //                lr.Message = "Password incorrect";
-                //                return lr;
-                //            }
-                //        }
+                        lr.statusCode = 1;
+                        lr.Message = "Login success";
+                        return lr;
+                    }
+                    else
+                    {
+                        lr.statusCode = 0;
+                        lr.Message = "Password incorrect";
+                        return lr;
+                    }
+                }
 
             }
             catch (Exception ex)
@@ -73,269 +75,232 @@ namespace OpticalFibersRetailShop.DAL
             return lr;
         }
 
-        ////Count for SuperAdmin Dashboards
-        //public int TotalSubscriptions()
-        //{
-        //    int count = _context.schools.Where(a => a.IsDeleted == false).Count();
-        //    return count;
-        //}
-        ////User Type
-        //public List<UserTypeDTO> GetUserType(int id)
-        //{
-        //    var result = (from user in _context.userTypeEntites
-        //                  where user.IsDeleted == false && user.CreatedBy==id
-        //                  select new UserTypeDTO
-        //                  {
-        //                      UserTypeId = user.UserTypeId,
-        //                      UserTypeName = user.UserTypeName,
-        //                      Description = user.Description
-        //                  }).ToList();
+        //Count for SuperAdmin Dashboards
+        public int TotalSubscriptions()
+        {
+            int count = _context.userEntity.Where(a => a.IsDeleted == false).Count();
+            return count;
+        }
+        //User Type
+        public List<UserTypeDTO> GetUserType(int id)
+        {
+            var result = (from user in _context.uTypeEntity
+                          where user.IsDeleted == false
+                          select new UserTypeDTO
+                          {
+                              RoleId = user.RoleId,
+                              RoleName = user.RoleName
+                          }).ToList();
 
-        //    return result;
-        //}
-
-
-        //public GenericResponse AddUserType(UserTypeDTO obj , int id)
-        //{
-        //    GenericResponse response = new GenericResponse();
-        //    UserTypeEntites entity = new UserTypeEntites();
-        //    int count = _context.userTypeEntites.Where(a => a.UserTypeName == obj.UserTypeName && a.CreatedBy==id && a.IsDeleted==false).Count();
-        //    try
-        //    {
-        //        if (count ==0)
-        //        {
-        //            entity.UserTypeName = obj.UserTypeName;
-        //            entity.Description = obj.Description;
-        //            entity.IsDeleted = false;
-        //            entity.IsActive = true;
-        //            entity.CreatedOn = DateTime.Now;
-        //            entity.CreatedBy = id;
-
-        //            _context.userTypeEntites.Add(entity);
-        //            _context.SaveChanges();
-        //            response.statuCode = 1;
-        //            response.message = "Success";
-        //            response.currentId = entity.UserTypeId;
-        //        }
-        //        else
-        //        {
-        //            response.statuCode = 0;
-        //            response.message = "User Type Alredy exist";
-        //        }
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        response.statuCode = 0;
-        //        response.message = "failed to add UserType" + ex;
-        //    }
-        //    return response;
-        //}
-
-        //public GenericResponse UpdateUserType(UserTypeDTO obj, int id)
-        //{
-        //    GenericResponse response = new GenericResponse();
-        //    var result = _context.userTypeEntites.Where(a => a.UserTypeId == obj.UserTypeId && a.IsDeleted == false).FirstOrDefault();
-        //    int count = _context.userTypeEntites.Where(a => a.UserTypeName == obj.UserTypeName).Count();
-        //    try
-        //    {
-        //        if (count == 1)
-        //        {
-        //            result.UserTypeId = obj.UserTypeId;
-        //            result.UserTypeName = obj.UserTypeName;
-        //            result.Description = obj.Description;
-        //            result.IsDeleted = false;
-        //            result.IsActive = true;
-        //            result.CreatedOn = result.CreatedOn;
-        //            result.UpdatedOn = DateTime.Now;
-        //            result.UpdatedBy = id;
-
-        //            _context.userTypeEntites.Update(result);
-        //            _context.SaveChanges();
-        //            response.statuCode = 1;
-        //            response.message = "Success";
-        //            response.currentId = result.UserTypeId;
-        //        }
-        //        else
-        //        {
-        //            response.statuCode = 0;
-        //            response.message = "User Type Alredy exist";
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.statuCode = 0;
-        //        response.message = "failed to Update UserType" + ex;
-        //    }
-        //    return response;
-        //}
-
-        //public GenericResponse DeleteUserType(int id)
-        //{
-        //    GenericResponse response = new GenericResponse();
-        //    var result = _context.userTypeEntites.Where(a => a.UserTypeId == id && a.IsDeleted == false).FirstOrDefault();
-        //    try
-        //    {
-        //            result.IsDeleted = true;
-        //            result.IsActive = false;
-        //            _context.userTypeEntites.Update(result);
-        //            _context.SaveChanges();
-        //            response.statuCode = 1;
-        //            response.message = "Success";
-        //            response.currentId = result.UserTypeId;
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.statuCode = 0;
-        //        response.message = "Failed to Delete UserType" + ex;
-        //    }
-        //    return response;
-        //}
+            return result;
+        }
 
 
-        ////UserMaster
-        //public List<UserDto> GetUser(int id)
-        //{
-        //    var result = (from user in _context.userEntity
-        //                  where user.IsDeleted == false && user.CreatedBy==id
-        //                  select new UserDto
-        //                  {
-        //                      UserId = user.UserId,
-        //                      FullName=user.FullName,
-        //                      Email=user.Email,
-        //                      ProfilePicture=user.ProfilePicture,
-        //                      UserType = _context.userTypeEntites.Where(a=>a.UserTypeId== user.UserTypeId && a.IsDeleted==false).Select(a=>a.UserTypeName).FirstOrDefault()
+        public GenericResponse AddUserType(UserTypeDTO obj, int id)
+        {
+            GenericResponse response = new GenericResponse();
+            UserTypeEntites entity = new UserTypeEntites();
+            int count = _context.uTypeEntity.Where(a => a.RoleName == obj.RoleName && a.IsDeleted == false).Count();
+            try
+            {
+                if (count == 0)
+                {
+                    entity.RoleName = obj.RoleName;
+                    entity.IsDeleted = false;
 
-        //                  }).ToList();
+                    _context.uTypeEntity.Add(entity);
+                    _context.SaveChanges();
+                    response.statuCode = 1;
+                    response.message = "Success";
+                    response.currentId = entity.RoleId;
+                }
+                else
+                {
+                    response.statuCode = 0;
+                    response.message = "User Type Alredy exist";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.statuCode = 0;
+                response.message = "failed to add UserType" + ex;
+            }
+            return response;
+        }
 
-        //    return result;
-        //}
+        public GenericResponse UpdateUserType(UserTypeDTO obj, int id)
+        {
+            GenericResponse response = new GenericResponse();
+            var result = _context.uTypeEntity.Where(a => a.RoleId == obj.RoleId && a.IsDeleted == false).FirstOrDefault();
+            int count = _context.uTypeEntity.Where(a => a.RoleName == obj.RoleName).Count();
+            try
+            {
+                if (count == 1)
+                {
+                    result.RoleId = obj.RoleId;
+                    result.RoleName = obj.RoleName;
+                    result.IsDeleted = false;
+                    _context.uTypeEntity.Update(result);
+                    _context.SaveChanges();
+                    response.statuCode = 1;
+                    response.message = "Success";
+                    response.currentId = result.RoleId;
+                }
+                else
+                {
+                    response.statuCode = 0;
+                    response.message = "User Type Alredy exist";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.statuCode = 0;
+                response.message = "failed to Update UserType" + ex;
+            }
+            return response;
+        }
+
+        public GenericResponse DeleteUserType(int id)
+        {
+            GenericResponse response = new GenericResponse();
+            var result = _context.uTypeEntity.Where(a => a.RoleId == id && a.IsDeleted == false).FirstOrDefault();
+            try
+            {
+                result.IsDeleted = true;
+                _context.uTypeEntity.Update(result);
+                _context.SaveChanges();
+                response.statuCode = 1;
+                response.message = "Success";
+                response.currentId = result.RoleId;
+
+            }
+            catch (Exception ex)
+            {
+                response.statuCode = 0;
+                response.message = "Failed to Delete UserType" + ex;
+            }
+            return response;
+        }
 
 
-        //public GenericResponse AddUser(UserDto obj, int id)
-        //{
-        //    GenericResponse response = new GenericResponse();
-        //    UserEntity entity = new UserEntity();
-        //    AddressEntity address = new AddressEntity();
-        //    int AddressId = _context.addressEntity.OrderByDescending(a => a.AddressId).Select(a => a.AddressId).FirstOrDefault();
-        //    int count = _context.userEntity.Where(a => a.FullName == obj.FullName && a.IsDeleted==false).Count();
-        //    try
-        //    {
-        //        if (count < 1)
-        //        {
+        //UserMaster
+        public List<UserDto> GetUser(int id)
+        {
+            var result = (from user in _context.userEntity
+                          where user.IsDeleted == false 
+                          select new UserDto
+                          {
+                              UserId = user.UserId,
+                              FullName = user.FullName,
+                              Email = user.Email,
+                              UserType = _context.uTypeEntity.Where(a => a.RoleId == user.RoleId && a.IsDeleted == false).Select(a => a.RoleName).FirstOrDefault()
 
-        //            entity.FullName = obj.FullName;
-        //            entity.Email = obj.Email;
-        //            entity.ProfilePicture = obj.ProfilePicture;
-        //            entity.UserTypeId = _context.userTypeEntites.Where(a=>a.UserTypeName==obj.UserType && a.CreatedBy==id && a.IsDeleted==false).Select(a=>a.UserTypeId).FirstOrDefault();
-        //            entity.IsDeleted = false;
-        //            entity.IsActive = true;
-        //            entity.PasswordHash = EncryptTool.Encrypt(obj.PasswordHash);
-        //            entity.CreatedOn = DateTime.Now;
-        //            entity.CreatedBy = id;
+                          }).ToList();
 
-        //            _context.userEntity.Add(entity);
-        //            _context.SaveChanges();
-        //            address.AddressId = AddressId+1;
-        //            address.AddressLine = obj.AddressLine;
-        //            address.UserId = entity.UserId;
-        //            address.City = obj.City;
-        //            address.State = obj.State;
-        //            address.PinCode = obj.PinCode;
-        //            address.IsDeleted = false;
-        //            address.CreatedOn = DateTime.Now;
-        //            address.CreatedBy = id;
-        //            _context.addressEntity.Add(address);
-        //            _context.SaveChanges();
-        //            response.statuCode = 1;
-        //            response.message = "Success";
-        //            response.currentId = entity.UserId;
-        //        }
-        //        else
-        //        {
-        //            response.statuCode = 0;
-        //            response.message = "User Name Alredy exist";
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.statuCode = 0;
-        //        response.message = "failed to add User" + ex;
-        //    }
-        //    return response;
-        //}
+            return result;
+        }
 
-        //public GenericResponse UpdateUser(UserDto obj, int id)
-        //{
-        //    GenericResponse response = new GenericResponse();
-        //    var result = _context.userEntity.Where(a => a.UserId == obj.UserId && a.IsDeleted == false).FirstOrDefault();
-        //    int count = _context.userEntity.Where(a => a.FullName == obj.FullName).Count();
-        //    try
-        //    {
-        //        if (count == 1)
-        //        {
-        //            result.FullName = obj.FullName;
-        //            result.Email = obj.Email;
-        //            result.UserTypeId = _context.userTypeEntites.Where(a => a.UserTypeName == obj.UserType && a.IsDeleted == false).Select(a => a.UserTypeId).FirstOrDefault();
-        //            result.PasswordHash = EncryptTool.Encrypt(obj.PasswordHash);
-        //            result.IsDeleted = false;
-        //            result.IsActive = true;
-        //            result.CreatedOn = result.CreatedOn;
-        //            result.CreatedBy = result.CreatedBy;
-        //            result.UpdatedOn = DateTime.Now;
-        //            result.UpdatedBy = id;
-        //            if (obj.ProfilePicture == null)
-        //            {
-        //                result.ProfilePicture = result.ProfilePicture;
-        //            }
-        //            else
-        //            {
-        //                result.ProfilePicture = obj.ProfilePicture;
-        //            }
-        //                _context.userEntity.Update(result);
-        //            _context.SaveChanges();
-        //            response.statuCode = 1;
-        //            response.message = "Success";
-        //            response.currentId = result.UserId;
-        //        }
-        //        else
-        //        {
-        //            response.statuCode = 0;
-        //            response.message = "User Name Alredy exist";
-        //        }
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.statuCode = 0;
-        //        response.message = "Failed to Update User" + ex;
-        //    }
-        //    return response;
-        //}
+        public GenericResponse AddUser(UserDto obj, int id)
+        {
+            GenericResponse response = new GenericResponse();
+            UserEntity entity = new UserEntity();
+           
+            int count = _context.userEntity.Where(a => a.FullName == obj.FullName&&a.StoreName==obj.StoreName && a.IsDeleted == false).Count();
+            try
+            {
+                if (count < 1)
+                {
 
-        //public GenericResponse DeleteUser(int id)
-        //{
-        //    GenericResponse response = new GenericResponse();
-        //    var result = _context.userEntity.Where(a => a.UserId == id && a.IsDeleted == false).FirstOrDefault();
-        //    try
-        //    {
-        //        result.IsDeleted = true;
-        //        result.IsActive = false;
-        //        _context.userEntity.Update(result);
-        //        _context.SaveChanges();
-        //        response.statuCode = 1;
-        //        response.message = "Success";
-        //        response.currentId = result.UserId;
+                    entity.FullName = obj.FullName;
+                    entity.StoreName = obj.StoreName;
+                    entity.Email = obj.Email;
+                    entity.RoleId = _context.uTypeEntity.Where(a => a.RoleName == obj.UserType && a.IsDeleted == false).Select(a => a.RoleId).FirstOrDefault();
+                    entity.IsDeleted = false;
+                    entity.IsActive = true;
+                    entity.PasswordHash = EncryptTool.Encrypt(obj.PasswordHash);
+                    entity.Address = obj.AddressLine;
+                    _context.userEntity.Add(entity);
+                    _context.SaveChanges();
+                  
+                    response.statuCode = 1;
+                    response.message = "Success";
+                    response.currentId = entity.UserId;
+                }
+                else
+                {
+                    response.statuCode = 0;
+                    response.message = "User Name Alredy exist";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.statuCode = 0;
+                response.message = "failed to add User" + ex;
+            }
+            return response;
+        }
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.statuCode = 0;
-        //        response.message = "Failed to Delete User" + ex;
-        //    }
-        //    return response;
-        //}
+        public GenericResponse UpdateUser(UserDto obj, int id)
+        {
+            GenericResponse response = new GenericResponse();
+            var result = _context.userEntity.Where(a => a.UserId == obj.UserId && a.IsDeleted == false).FirstOrDefault();
+            int count = _context.userEntity.Where(a => a.FullName == obj.FullName && a.StoreName==obj.StoreName).Count();
+            try
+            {
+                if (count == 1)
+                {
+                    result.FullName = obj.FullName;
+                    result.StoreName = obj.StoreName;
+                    result.Email = obj.Email;
+                    result.RoleId = _context.uTypeEntity.Where(a => a.RoleName == obj.UserType && a.IsDeleted == false).Select(a => a.RoleId).FirstOrDefault();
+                    result.PasswordHash = EncryptTool.Encrypt(obj.PasswordHash);
+                    result.IsDeleted = false;
+                    result.IsActive = true;
+                    _context.userEntity.Update(result);
+                    _context.SaveChanges();
+                    response.statuCode = 1;
+                    response.message = "Success";
+                    response.currentId = result.UserId;
+                }
+                else
+                {
+                    response.statuCode = 0;
+                    response.message = "User Name Alredy exist";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.statuCode = 0;
+                response.message = "Failed to Update User" + ex;
+            }
+            return response;
+        }
+
+        public GenericResponse DeleteUser(int id)
+        {
+            GenericResponse response = new GenericResponse();
+            var result = _context.userEntity.Where(a => a.UserId == id && a.IsDeleted == false).FirstOrDefault();
+            try
+            {
+                result.IsDeleted = true;
+                result.IsActive = false;
+                _context.userEntity.Update(result);
+                _context.SaveChanges();
+                response.statuCode = 1;
+                response.message = "Success";
+                response.currentId = result.UserId;
+
+            }
+            catch (Exception ex)
+            {
+                response.statuCode = 0;
+                response.message = "Failed to Delete User" + ex;
+            }
+            return response;
+        }
 
 
 
