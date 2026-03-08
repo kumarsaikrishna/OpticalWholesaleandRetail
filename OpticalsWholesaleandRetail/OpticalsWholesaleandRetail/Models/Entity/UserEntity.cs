@@ -12,6 +12,9 @@ namespace OpticalFibersRetailShop.Models.Entity
         [Required]
         [MaxLength(100)]
         public string? FullName { get; set; }
+        [Required]
+        [MaxLength(100)]
+        public string? StoreName { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -23,10 +26,10 @@ namespace OpticalFibersRetailShop.Models.Entity
         [Required]
         [MaxLength(10)]
         public string? Phone { get; set; }
+        public string? Address { get; set; }
         public int RoleId { get; set; }
  
         public bool? IsDeleted { get; set; }
         public bool? IsActive { get; set; }
-        public DateTime? CreatedOn { get; set; }
     }
 }

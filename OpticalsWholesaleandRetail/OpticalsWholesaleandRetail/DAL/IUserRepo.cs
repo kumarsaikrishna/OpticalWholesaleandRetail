@@ -1,6 +1,7 @@
 ﻿using OpticalFibersRetailShop.Utilities;
 //using Microsoft.AspNetCore.Identity.Data;
 using OpticalFibersRetailShop.Models.DTO;
+using System.Collections.Generic;
 
 namespace OpticalFibersRetailShop.DAL
 {
@@ -9,19 +10,19 @@ namespace OpticalFibersRetailShop.DAL
         LoginResponse LoginCheck(LoginRequest request);
 
         //        //Count for Super Admin Dashboard
-        //        int TotalSubscriptions();
+               int TotalSubscriptions();
 
         //        //User Type
-        //        List<UserTypeDTO> GetUserType(int id);
-        //        GenericResponse AddUserType(UserTypeDTO obj, int id);
-        //        GenericResponse UpdateUserType(UserTypeDTO obj, int id);
-        //        GenericResponse DeleteUserType(int id);
+        List<UserTypeDTO> GetUserType(int id);
+        GenericResponse AddUserType(UserTypeDTO obj, int id);
+        GenericResponse UpdateUserType(UserTypeDTO obj, int id);
+        GenericResponse DeleteUserType(int id);
 
         //        //User Master
-        //        List<UserDto> GetUser(int id);
-        //        GenericResponse AddUser(UserDto obj, int id);
-        //        GenericResponse UpdateUser(UserDto obj, int id);
-        //        GenericResponse DeleteUser(int id);
+        List<UserDto> GetUser(int id);
+        GenericResponse AddUser(UserDto obj, int id);
+        GenericResponse UpdateUser(UserDto obj, int id);
+        GenericResponse DeleteUser(int id);
 
         //        //Duration
 

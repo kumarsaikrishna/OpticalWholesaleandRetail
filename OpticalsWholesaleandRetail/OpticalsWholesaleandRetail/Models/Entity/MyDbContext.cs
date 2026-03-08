@@ -16,6 +16,7 @@ namespace OpticalFibersRetailShop.Models.Entity
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserEntity>().ToTable("Users");
+            modelBuilder.Entity<UserTypeEntites>().ToTable("Roles");
 
 
 
@@ -23,7 +24,8 @@ namespace OpticalFibersRetailShop.Models.Entity
 
 
         public DbSet<UserEntity> userEntity { get; set; }
-       
+        public DbSet<UserTypeEntites> uTypeEntity { get; set; }
+
 
         //public void CreateDynamicTable(string tableName, List<string> subjects)
         //{
