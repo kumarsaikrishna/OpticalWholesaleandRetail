@@ -10,7 +10,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using System;
 
-namespace SmartSchool.Controllers
+namespace OpticalFibersRetailShop.Controllers
 {
     public class UserManagementController : Controller
     {
@@ -21,8 +21,8 @@ namespace SmartSchool.Controllers
             _user = user;
             _context = context;
         }
-        [Authorize(Policy = "Super Admin, Admin")]
-        public IActionResult GetUserType()
+        //[Authorize(Policy = "Admin")]
+        public IActionResult GetUserTypes()
         {
             var loggedInUser = SessionHelper.GetObjectFromJson<LoginResponse>(HttpContext.Session, "loggedUser");
             if (loggedInUser == null)
@@ -46,11 +46,11 @@ namespace SmartSchool.Controllers
             response = _user.AddUserType(obj,loggedInUser.userId);
             if (response.statuCode == 1)
             {
-                return Json(new { success = true });
+                return RedirectToAction("GetUserTypes");
             }
             else
             {
-                return RedirectToAction("GetUserType");
+                return RedirectToAction("GetUserTypes");
             }
         }
         [HttpPost]
@@ -66,11 +66,11 @@ namespace SmartSchool.Controllers
             response = _user.UpdateUserType(obj, loggedInUser.userId);
             if (response.statuCode == 1)
             {
-                return Json(new { success = true });
+                return RedirectToAction("GetUserTypes");
             }
             else
             {
-                return RedirectToAction("GetUserType");
+                return RedirectToAction("GetUserTypes");
             }
         }
         [HttpPost]
@@ -85,16 +85,16 @@ namespace SmartSchool.Controllers
             response = _user.DeleteUserType(id);
             if (response.statuCode == 1)
             {
-                return Json(new { success = true });
+                return RedirectToAction("GetUserTypes");
             }
             else
             {
-                return RedirectToAction("GetUserType");
+                return RedirectToAction("GetUserTypes");
             }
         }
 
         //UserMaster
-        public IActionResult GetUser(string? state )
+        public IActionResult GetUser( )
         {
             var loggedInUser = SessionHelper.GetObjectFromJson<LoginResponse>(HttpContext.Session, "loggedUser");
             if (loggedInUser == null)
@@ -116,11 +116,9 @@ namespace SmartSchool.Controllers
             var user = new UserDto
             {
                 FullName = form["FullName"],
-                StoreName=form["StoreName"],
                 Email = form["Email"],
                 UserType = form["UserType"],
                 PasswordHash = form["PasswordHash"],
-                AddressLine = form["AddressLine"],
               Phone=form["Phone"],
             };
 
@@ -155,11 +153,9 @@ namespace SmartSchool.Controllers
             {
                 UserId = Convert.ToInt32(form["UserId"]),
                 FullName = form["FullName"],
-                StoreName=form["StoreName"],
                 Email = email,
                 UserType = form["UserType"],
                 PasswordHash = form["PasswordHash"],
-                AddressLine=form["AddressLine"],
                 Phone=form["Phone"],
             };
 
