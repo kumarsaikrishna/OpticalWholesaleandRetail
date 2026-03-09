@@ -43,7 +43,8 @@ namespace OpticalFibersRetailShop.DAL
                 {
                     //var p = EncryptTool.Decrypt(u.PasswordHash);
                     //if (request.Password == EncryptTool.Decrypt(u.PasswordHash))
-                    if(u.PasswordHash==request.Password)
+                    if(request.Password==u.PasswordHash)
+
                     {
                         lr.statusCode = 1;
                         lr.Message = "success";
@@ -135,7 +136,7 @@ namespace OpticalFibersRetailShop.DAL
             int count = _context.uTypeEntity.Where(a => a.RoleName == obj.RoleName).Count();
             try
             {
-                if (count == 1)
+                if (count == 0)
                 {
                     result.RoleId = obj.RoleId;
                     result.RoleName = obj.RoleName;
@@ -194,8 +195,8 @@ namespace OpticalFibersRetailShop.DAL
                               UserId = user.UserId,
                               FullName = user.FullName,
                               Email = user.Email,
-                              UserType = _context.uTypeEntity.Where(a => a.RoleId == user.RoleId && a.IsDeleted == false).Select(a => a.RoleName).FirstOrDefault()
-
+                              UserType = _context.uTypeEntity.Where(a => a.RoleId == user.RoleId && a.IsDeleted == false).Select(a => a.RoleName).FirstOrDefault(),
+                              Phone=user.Phone,
                           }).ToList();
 
             return result;
@@ -207,20 +208,20 @@ namespace OpticalFibersRetailShop.DAL
             GenericResponse response = new GenericResponse();
             UserEntity entity = new UserEntity();
            
-            int count = _context.userEntity.Where(a => a.FullName == obj.FullName&&a.StoreName==obj.StoreName && a.IsDeleted == false).Count();
+            int count = _context.userEntity.Where(a => a.FullName == obj.FullName && a.IsDeleted == false).Count();
             try
             {
                 if (count < 1)
                 {
 
                     entity.FullName = obj.FullName;
-                    entity.StoreName = obj.StoreName;
                     entity.Email = obj.Email;
                     entity.RoleId = _context.uTypeEntity.Where(a => a.RoleName == obj.UserType && a.IsDeleted == false).Select(a => a.RoleId).FirstOrDefault();
                     entity.IsDeleted = false;
                     entity.IsActive = true;
                     entity.PasswordHash = EncryptTool.Encrypt(obj.PasswordHash);
-                    entity.Address = obj.AddressLine;
+                    entity.Phone = obj.Phone;
+                    entity.CreatedDate = DateTime.Now;
                     _context.userEntity.Add(entity);
                     _context.SaveChanges();
                   
@@ -246,16 +247,17 @@ namespace OpticalFibersRetailShop.DAL
         {
             GenericResponse response = new GenericResponse();
             var result = _context.userEntity.Where(a => a.UserId == obj.UserId && a.IsDeleted == false).FirstOrDefault();
-            int count = _context.userEntity.Where(a => a.FullName == obj.FullName && a.StoreName==obj.StoreName).Count();
+            int count = _context.userEntity.Where(a => a.FullName == obj.FullName ).Count();
             try
             {
                 if (count == 1)
                 {
                     result.FullName = obj.FullName;
-                    result.StoreName = obj.StoreName;
                     result.Email = obj.Email;
                     result.RoleId = _context.uTypeEntity.Where(a => a.RoleName == obj.UserType && a.IsDeleted == false).Select(a => a.RoleId).FirstOrDefault();
                     result.PasswordHash = EncryptTool.Encrypt(obj.PasswordHash);
+                    result.Phone = obj.Phone;
+                    result.CreatedDate = DateTime.Now;
                     result.IsDeleted = false;
                     result.IsActive = true;
                     _context.userEntity.Update(result);

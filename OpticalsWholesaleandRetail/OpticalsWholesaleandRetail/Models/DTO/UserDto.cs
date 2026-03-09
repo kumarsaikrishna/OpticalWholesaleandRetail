@@ -7,7 +7,6 @@ namespace OpticalFibersRetailShop.Models.DTO
         public int UserId { get; set; }
 
         public string? FullName { get; set; }
-        public string? StoreName { get; set; }
         public string? Email { get; set; }
         public string? UserType { get; set; }
 
@@ -16,7 +15,7 @@ namespace OpticalFibersRetailShop.Models.DTO
         public int UserTypeId { get; set; }
         public string? Phone { get; set; }
 
-        public string AddressLine { get; set; }
+       
  
 
 

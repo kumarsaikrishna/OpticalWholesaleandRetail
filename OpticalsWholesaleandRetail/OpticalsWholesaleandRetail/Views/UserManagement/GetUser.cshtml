@@ -38,9 +38,11 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Full Name</th>
+                                        <th>Store Name</th>
                                         <th>Email</th>
                                         <th>User Type</th>
-                                        <th>Profile Picture</th> <!-- New column -->
+                                        <th>Phone</th>
+                                        <th>Address</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -50,14 +52,12 @@
                                     <tr>
                                         <td>@sno</td>
                                         <td>@user.FullName</td>
-                                        <td>@user.StoreName</td>
                                         <td>@user.Email</td>
                                         <td>@user.UserType</td>
                                         <td>@user.Phone</td>
-                                        <td>@user.AddressLine</td>
                                         
                                         <td>
-                                            <a href="#" onclick="EditUser('@user.UserId', '@user.FullName','@user.StoreName', '@user.Email', '@user.UserType', '@user.Phone','@user.AddressLine')" class="text-primary">
+                                            <a href="#" onclick="EditUser('@user.UserId', '@user.FullName', '@user.Email', '@user.UserType', '@user.Phone')" class="text-primary">
                                                 <button type="button" class="btn btn-circle btn-primary btn-xs">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
@@ -100,10 +100,6 @@
                             <label>Full Name <span class="required">*</span></label>
                             <input type="text" name="FullName" class="form-control" required />
                         </div>
-                        <div class="col-lg-6">
-                            <label>Store Name <span class="required">*</span></label>
-                            <input type="text" name="StoreName" class="form-control" required />
-                        </div>
 
                         <!-- User Type -->
                         <div class="col-lg-6">
@@ -133,17 +129,17 @@
                             <input type="number" name="Phone" class="form-control" required />
                         </div>
 
-                        <div class="col-lg-12 mt-4">
+                        <!--<div class="col-lg-12 mt-4">-->
                             <!-- Added margin-top -->
-                            <h5 class="mb-3" style="background-color: whitesmoke; color: black; padding: 10px; text-transform: uppercase;">
+                            <!--<h5 class="mb-3" style="background-color: whitesmoke; color: black; padding: 10px; text-transform: uppercase;">
                                 Address
                             </h5>
-                        </div>
+                        </div>-->
                         <!-- AddressLine -->
-                        <div class="col-lg-6">
+                        <!--<div class="col-lg-6">
                             <label for="Address">Address <span class="required">*</span></label>
                             <input type="text" name="AddressLine" class="form-control" required />
-                        </div>
+                        </div>-->
                         @*<div class="col-lg-6">
             <label for="States">State <span class="required">*</span></label>
             <select class="form-control" id="State" name="State" required>
@@ -196,10 +192,6 @@
                             <input type="text" class="form-control" id="editFullName" name="FullName" required />
                         </div>
                         <div class="col-lg-6">
-                            <label>Store Name <span class="required">*</span></label>
-                            <input type="text" class="form-control" id="editStoreName" name="StoreName" required />
-                        </div>
-                        <div class="col-lg-6">
                             <label>User Type <span class="required">*</span></label>
                             <select class="form-control" id="editUserType" name="UserType" required>
                                 <option value="" selected>--Select--</option>
@@ -222,16 +214,16 @@
                             <label>Phone <span class="required">*</span></label>
                             <input type="number" class="form-control" id="editPhone" name="Phone" required />
                         </div>
-                        <div class="col-lg-12 mt-4">
+                        <!--<div class="col-lg-12 mt-4">-->
                             <!-- Added margin-top -->
-                            <h5 class="mb-3" style="background-color: whitesmoke; color: black; padding: 10px; text-transform: uppercase;">
+                            <!--<h5 class="mb-3" style="background-color: whitesmoke; color: black; padding: 10px; text-transform: uppercase;">
                                 Address
                             </h5>
                         </div>
                         <div class="col-lg-6">
                             <label for="editAddress">Address <span class="required">*</span></label>
                             <input type="text" class="form-control" id="editAddress" name="AddressLine" required />
-                        </div>
+                        </div>-->
                         @*<div class="col-lg-6">
                             <label for="editState">State <span class="required">*</span></label>
                             <select class="form-control" id="editState" name="State" required>
@@ -310,9 +302,7 @@
         $('#editEmail').val(email);
         $('#editUserType').val(userType);
         $('#editPasswordHash').val(passwordHash);
-        $('#editStoreName').val(storename);
         $('#editPhone').val(phone);
-        $('#editAddressLine').val(addressline);
 
 
         $('#editUserModal').modal('show');
