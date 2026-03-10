@@ -1,5 +1,5 @@
-using OpticalFibersRetailShop.DAL;
-using OpticalFibersRetailShop.Models.Entity;
+using OpticalsWholesaleandRetail.DAL;
+using OpticalsWholesaleandRetail.Models.Entity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace OpticalFibersRetailShop
+namespace OpticalsWholesaleandRetail
 {
     public class Startup
     {

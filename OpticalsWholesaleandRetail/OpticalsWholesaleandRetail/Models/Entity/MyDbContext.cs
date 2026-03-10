@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OpticalFibersRetailShop.Models.Entity;
+using OpticalsWholesaleandRetail.Models.Entity;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpticalFibersRetailShop.Models.Entity
+namespace OpticalsWholesaleandRetail.Models.Entity
 {
     public class MyDbContext : DbContext
     {
@@ -17,6 +17,10 @@ namespace OpticalFibersRetailShop.Models.Entity
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserEntity>().ToTable("Users");
             modelBuilder.Entity<UserTypeEntites>().ToTable("Roles");
+            modelBuilder.Entity<Customer>().ToTable("Customers");
+            modelBuilder.Entity<Suppliers>().ToTable("Suppliers");
+            modelBuilder.Entity<OrdersEntity>().ToTable("Orders");
+            modelBuilder.Entity<OrderItemEntity>().ToTable("OrderItems");
 
 
 
@@ -25,6 +29,10 @@ namespace OpticalFibersRetailShop.Models.Entity
 
         public DbSet<UserEntity> userEntity { get; set; }
         public DbSet<UserTypeEntites> uTypeEntity { get; set; }
+        public DbSet<Customer> customerEntity { get; set; }
+        public DbSet<Suppliers> suppliersEntity { get; set; }
+        public DbSet<OrderItemEntity> OrderItemEntities { get; set; }
+        public DbSet<OrdersEntity> ordersEntities { get; set; }
 
 
         //public void CreateDynamicTable(string tableName, List<string> subjects)

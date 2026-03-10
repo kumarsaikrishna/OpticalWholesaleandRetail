@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System;
 
-namespace OpticalFibersRetailShop.Models.Entity
+namespace OpticalsWholesaleandRetail.Models.Entity
 {
     public class UserEntity
     {

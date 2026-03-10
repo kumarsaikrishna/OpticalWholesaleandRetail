@@ -1,0 +1,295 @@
+﻿@model IEnumerable<OpticalsWholesaleandRetail.Models.DTO.CustomersDto>
+
+<div class="d-flex justify-content-between mb-3">
+
+    <h2>Stores</h2>
+
+    <button class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#addStoreModal">
+        Add Store
+    </button>
+
+</div>
+
+<table class="table table-dark table-bordered">
+
+    <thead>
+        <tr>
+            <th>Store Name</th>
+            <th>City</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var store in Model)
+        {
+        <tr>
+            
+               <td><a href="javascript:void(0)"
+   class="storeOrdersBtn text-info"
+   data-id="@store.CustomerId">
+    @store.StoreName
+</a></td>
+            <td>@store.City</td>
+            <td>@store.Phone</td>
+            <td>@store.Address</td>
+
+
+
+            <td>
+                <button class="btn btn-warning btn-sm editStoreBtn"
+                        data-id="@store.CustomerId"
+                        data-storename="@store.StoreName"
+                        data-email="@store.Email"
+                        data-phone="@store.Phone"
+                        data-country="@store.Country"
+                        data-city="@store.City"
+                        data-address="@store.Address"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editStoreModal">
+                    Edit
+                </button>
+            </td>
+            <td>
+                <a asp-action="DeleteStore"
+                   asp-route-id="@store.CustomerId"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure?')">
+
+                    Delete
+
+                </a>
+
+            </td>
+
+        </tr>
+        }
+
+    </tbody>
+
+</table>
+<div class="modal fade" id="ordersModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Store Orders</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <table class="table table-bordered table-dark">
+                    <thead>
+                        <tr>
+                            <th>Order Id</th>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="ordersTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addStoreModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Add Store</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form asp-action="AddStore" method="post">
+
+                <div class="modal-body">
+
+                    <!-- Hidden CustomerId -->
+                    <input type="hidden" name="CustomerId" value="@ViewBag.CustomerId" />
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label>Customer Name</label>
+                            <input name="CustomerName"
+                                   class="form-control"
+                                   value="@ViewBag.CustomerName"
+                                   readonly />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Store Name</label>
+                            <input name="StoreName" class="form-control" required />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Email</label>
+                            <input name="Email" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Phone</label>
+                            <input name="Phone" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Country</label>
+                            <input name="Country" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>City</label>
+                            <input name="City" class="form-control" />
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label>Address</label>
+                            <textarea name="Address" class="form-control"></textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-success">Save Store</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editStoreModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Edit Store</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form asp-action="EditStore" method="post">
+
+                <div class="modal-body">
+
+                    <input type="hidden" id="EditCustomerId" name="CustomerId" />
+                    <input type="hidden" name="CustomersId" value="@ViewBag.CustomersId" />
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label>Customer Name</label>
+                            <input class="form-control"
+                                   value="@ViewBag.CustomerName"
+                                   readonly />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Store Name</label>
+                            <input id="EditStoreName" name="StoreName" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Email</label>
+                            <input id="EditEmail" name="Email" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Phone</label>
+                            <input id="EditPhone" name="Phone" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Country</label>
+                            <input id="EditCountry" name="Country" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>City</label>
+                            <input id="EditCity" name="City" class="form-control" />
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label>Address</label>
+                            <textarea id="EditAddress" name="Address" class="form-control"></textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-success">Update</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    $(document).on("click", ".editStoreBtn", function () {
+
+        $("#EditCustomerId").val($(this).data("CustomerId"));
+        $("#EditStoreName").val($(this).data("storename"));
+        $("#EditEmail").val($(this).data("email"));
+        $("#EditPhone").val($(this).data("phone"));
+        $("#EditCountry").val($(this).data("country"));
+        $("#EditCity").val($(this).data("city"));
+        $("#EditAddress").val($(this).data("address"));
+
+    });
+
+
+    $(document).on("click", ".storeOrdersBtn", function () {
+
+        var customerId = $(this).data("id");
+
+        $.ajax({
+            url: '/Orders/GetOrdersByStore',
+            type: 'GET',
+            data: { customerId: customerId },
+
+            success: function (data) {
+
+                var rows = '';
+
+                data.forEach(function (order) {
+
+                    rows += `<tr>
+                        <td>${order.orderId}</td>
+                        <td>${order.productName}</td>
+                        <td>${order.quantity}</td>
+                        <td>${order.totalAmount}</td>
+                        <td>${order.orderDate}</td>
+                      </tr>`;
+                });
+
+                $("#ordersTableBody").html(rows);
+
+                $("#ordersModal").modal("show");
+            }
+        });
+
+    });
+
+</script>

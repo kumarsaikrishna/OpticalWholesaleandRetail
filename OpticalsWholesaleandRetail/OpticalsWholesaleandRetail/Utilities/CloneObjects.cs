@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace OpticalFibersRetailShop.Utilities
+namespace OpticalsWholesaleandRetail.Utilities
 {
     public static class CloneObjects
     {

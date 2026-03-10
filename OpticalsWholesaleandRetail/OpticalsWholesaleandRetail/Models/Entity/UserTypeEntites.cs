@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OpticalFibersRetailShop.Models.Entity
+namespace OpticalsWholesaleandRetail.Models.Entity
 {
     public class UserTypeEntites
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OpticalFibersRetailShop.Models.DTO
+namespace OpticalsWholesaleandRetail.Models.DTO
 {
     public class UserTypeDTO
     {

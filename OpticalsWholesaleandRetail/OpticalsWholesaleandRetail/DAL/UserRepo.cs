@@ -1,16 +1,16 @@
 ﻿ 
-using OpticalFibersRetailShop.Models.DTO;
-using OpticalFibersRetailShop.Utilities;
+using OpticalsWholesaleandRetail.Models.DTO;
+using OpticalsWholesaleandRetail.Utilities;
 //using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
-using OpticalFibersRetailShop.Models.Entity;
+using OpticalsWholesaleandRetail.Models.Entity;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace OpticalFibersRetailShop.DAL
+namespace OpticalsWholesaleandRetail.DAL
 {
     public class UserRepo : IUserRepo
     {
@@ -184,7 +184,26 @@ namespace OpticalFibersRetailShop.DAL
             return response;
         }
 
+        public List<CustomersDto> UserStores(int id)
+        {
+            var result = (from user in _context.customerEntity
+                          where user.CustomersId == id
+                          select new CustomersDto
+                          {
+                              CustomerId = user.CustomerId,
+                              StoreName = user.StoreName,
+                              CustomersId = user.CustomersId,
+                              Email = user.Email,
+                              Phone = user.Phone,
+                              Country = user.Country,
+                              Address=user.Address,
+                              City = user.City,
+                              CustomerName = _context.userEntity.Where(a => a.UserId == user.CustomersId && a.IsDeleted == false).Select(a => a.FullName).FirstOrDefault(),
+                             
+                          }).ToList();
 
+            return result;
+        }
         //UserMaster
         public List<UserDto> GetUser(int id)
         {
