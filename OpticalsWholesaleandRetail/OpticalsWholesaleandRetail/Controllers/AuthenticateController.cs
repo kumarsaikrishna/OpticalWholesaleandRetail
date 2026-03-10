@@ -1,12 +1,12 @@
-﻿using OpticalFibersRetailShop.Utilities;
+﻿using OpticalsWholesaleandRetail.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 //using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using OpticalFibersRetailShop.DAL;
-using OpticalFibersRetailShop.Models.Entity;
-using OpticalFibersRetailShop.Models.DTO;
+using OpticalsWholesaleandRetail.DAL;
+using OpticalsWholesaleandRetail.Models.Entity;
+using OpticalsWholesaleandRetail.Models.DTO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;

@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OpticalFibersRetailShop.Models.Entity;
-using OpticalFibersRetailShop.Utilities;
+using OpticalsWholesaleandRetail.Models.Entity;
+using OpticalsWholesaleandRetail.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using OpticalFibersRetailShop.DAL;
-using OpticalFibersRetailShop.Models.DTO;
+using OpticalsWholesaleandRetail.DAL;
+using OpticalsWholesaleandRetail.Models.DTO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using System;
 
-namespace OpticalFibersRetailShop.Controllers
+namespace OpticalsWholesaleandRetail.Controllers
 {
     public class UserManagementController : Controller
     {

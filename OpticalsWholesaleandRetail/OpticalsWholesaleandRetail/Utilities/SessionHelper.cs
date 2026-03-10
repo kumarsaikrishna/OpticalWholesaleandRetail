@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-namespace OpticalFibersRetailShop.Utilities
+namespace OpticalsWholesaleandRetail.Utilities
 {
 
     public static class SessionHelper

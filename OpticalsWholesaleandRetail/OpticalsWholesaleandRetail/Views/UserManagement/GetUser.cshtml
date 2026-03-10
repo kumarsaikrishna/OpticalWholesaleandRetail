@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OpticalFibersRetailShop.Models.DTO.UserDto>
+﻿@model IEnumerable<OpticalsWholesaleandRetail.Models.DTO.UserDto>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     int sno = 1;
@@ -38,11 +38,9 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Full Name</th>
-                                        <th>Store Name</th>
                                         <th>Email</th>
                                         <th>User Type</th>
                                         <th>Phone</th>
-                                        <th>Address</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -51,7 +49,14 @@
                                     {
                                     <tr>
                                         <td>@sno</td>
-                                        <td>@user.FullName</td>
+                                        <td>
+                                            <a asp-controller="Customer"
+                                                asp-action="UserStores"
+                                               asp-route-UserId="@user.UserId"
+                                               class="text-info">
+                                                @user.FullName
+                                            </a>
+                                        </td>
                                         <td>@user.Email</td>
                                         <td>@user.UserType</td>
                                         <td>@user.Phone</td>
@@ -96,14 +101,14 @@
                     @Html.AntiForgeryToken()
                     <div class="row">
                         <!-- Full Name -->
-                        <div class="col-lg-6">
-                            <label>Full Name <span class="required">*</span></label>
-                            <input type="text" name="FullName" class="form-control" required />
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                            <input type="text"name="FullName" class="form-control" />
                         </div>
 
                         <!-- User Type -->
-                        <div class="col-lg-6">
-                            <label>User Type <span class="required">*</span></label>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">User Type <span class="text-danger">*</span></label>
                             <select class="form-control" id="UserType" name="UserType" required>
                                 <option value="" selected>--Select--</option>
                                 @foreach (var item in ViewBag.UserType)
@@ -114,18 +119,18 @@
                         </div>
 
                         <!-- Email -->
-                        <div class="col-lg-6">
-                            <label>Email <span class="required">*</span></label>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email <span class="text-danger">*</span></label>
                             <input type="email" name="Email" class="form-control" required />
                         </div>
 
                         <!-- Password -->
-                        <div class="col-lg-6">
-                            <label>Password</label>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Password <span class="text-danger">*</span></label>
                             <input type="password" name="PasswordHash" class="form-control" />
                         </div>
-                        <div class="col-lg-6">
-                            <label>Phone <span class="required">*</span></label>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone <span class="text-danger">*</span></label>
                             <input type="number" name="Phone" class="form-control" required />
                         </div>
 
@@ -296,7 +301,7 @@
 
 
 
-    function EditUser(userId, fullName,storename, email, userType, passwordHash, phone,addressline) {
+    function EditUser(userId, fullName, email, userType, passwordHash, phone) {
         $('#editUserId').val(userId);
         $('#editFullName').val(fullName);
         $('#editEmail').val(email);

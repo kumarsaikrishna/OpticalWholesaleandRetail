@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace OpticalFibersRetailShop.Utilities
+namespace OpticalsWholesaleandRetail.Utilities
 {
     public class RandomGenerator
     {

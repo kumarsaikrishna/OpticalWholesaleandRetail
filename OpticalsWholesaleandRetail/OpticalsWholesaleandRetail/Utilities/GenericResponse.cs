@@ -1,4 +1,4 @@
-﻿namespace OpticalFibersRetailShop.Utilities
+﻿namespace OpticalsWholesaleandRetail.Utilities
 {
     public class GenericResponse
     {

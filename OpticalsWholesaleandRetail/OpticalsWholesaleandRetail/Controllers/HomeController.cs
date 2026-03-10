@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using OpticalFibersRetailShop.DAL;
-using OpticalFibersRetailShop.Utilities;
-using OpticalFibersRetailShop.Models.Entity;
+using OpticalsWholesaleandRetail.DAL;
+using OpticalsWholesaleandRetail.Utilities;
+using OpticalsWholesaleandRetail.Models.Entity;
 
-namespace OpticalFibersRetailShop.Controllers
+namespace OpticalsWholesaleandRetail.Controllers
 {
     public class HomeController : Controller
     {

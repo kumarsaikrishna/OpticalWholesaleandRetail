@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpticalFibersRetailShop.Utilities
+namespace OpticalsWholesaleandRetail.Utilities
 {
     public class LoginResponseModel
     {

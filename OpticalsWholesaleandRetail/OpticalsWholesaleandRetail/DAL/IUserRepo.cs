@@ -1,9 +1,9 @@
-﻿using OpticalFibersRetailShop.Utilities;
+﻿using OpticalsWholesaleandRetail.Utilities;
 //using Microsoft.AspNetCore.Identity.Data;
-using OpticalFibersRetailShop.Models.DTO;
+using OpticalsWholesaleandRetail.Models.DTO;
 using System.Collections.Generic;
 
-namespace OpticalFibersRetailShop.DAL
+namespace OpticalsWholesaleandRetail.DAL
 {
     public interface IUserRepo
     {
@@ -17,7 +17,7 @@ namespace OpticalFibersRetailShop.DAL
         GenericResponse AddUserType(UserTypeDTO obj, int id);
         GenericResponse UpdateUserType(UserTypeDTO obj, int id);
         GenericResponse DeleteUserType(int id);
-
+        List<CustomersDto> UserStores(int id);
         //        //User Master
         List<UserDto> GetUser(int id);
         GenericResponse AddUser(UserDto obj, int id);

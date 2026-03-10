@@ -69,3 +69,159 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+body.dark-bg {
+    background-color: #121212;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.login-card {
+    background: #1e1e2f;
+    border-radius: 12px;
+    width: 350px;
+}
+
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background: #1e1e2f;
+}
+
+.nav-link {
+    color: #aaa;
+    display: block;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+    .nav-link:hover,
+    .nav-link.active {
+        background: #00f2ff;
+        color: black;
+    }
+
+.content {
+    background: #181818;
+}
+
+.stat-card {
+    background: #1f1f1f;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px #00f2ff40;
+}
+
+.chart-card {
+    background: #1f1f1f;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.invoice-box {
+    background: #1f1f1f;
+    border-radius: 10px;
+}
+
+.btn-neon {
+    background: #00f2ff;
+    color: black;
+    font-weight: bold;
+}
+body {
+    margin: 0;
+    font-family: 'Segoe UI';
+    background: #0f172a;
+    color: white;
+}
+
+/* Layout */
+
+.wrapper {
+    display: flex;
+}
+
+/* Sidebar */
+
+.sidebar {
+    width: 230px;
+    height: 100vh;
+    background: #111827;
+    position: fixed;
+}
+
+.sidebar-header {
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #1f2937;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
+
+    .sidebar-menu li a {
+        display: block;
+        padding: 14px 20px;
+        color: #9ca3af;
+        text-decoration: none;
+        transition: .3s;
+    }
+
+        .sidebar-menu li a:hover {
+            background: #06b6d4;
+            color: white;
+        }
+
+    .sidebar-menu i {
+        margin-right: 10px;
+    }
+
+/* Main Content */
+
+.main-content {
+    margin-left: 230px;
+    padding: 25px;
+    width: 100%;
+}
+
+/* Stat Cards */
+
+.stat-card {
+    background: #111827;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,255,255,0.3);
+    transition: .3s;
+}
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 20px rgba(0,255,255,0.7);
+    }
+
+    .stat-card h2 {
+        font-size: 28px;
+        margin: 0;
+    }
+
+    .stat-card p {
+        margin: 5px 0 0;
+        color: #9ca3af;
+    }
+
+/* Charts */
+
+.chart-box {
+    background: #111827;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+.modal label {
+    color: #000 !important;
+    font-weight: 500;
+}
