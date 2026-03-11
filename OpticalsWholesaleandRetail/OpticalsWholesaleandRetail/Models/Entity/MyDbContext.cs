@@ -21,6 +21,11 @@ namespace OpticalsWholesaleandRetail.Models.Entity
             modelBuilder.Entity<Suppliers>().ToTable("Suppliers");
             modelBuilder.Entity<OrdersEntity>().ToTable("Orders");
             modelBuilder.Entity<OrderItemEntity>().ToTable("OrderItems");
+            modelBuilder.Entity<FrameBrandEntity>().ToTable("FrameBrands");
+            modelBuilder.Entity<FrameModelEntity>().ToTable("FrameModels");
+            modelBuilder.Entity<FrameSizeEntity>().ToTable("FrameSizes");
+            modelBuilder.Entity<FrameCategoryEntity>().ToTable("FrameCategories");
+            modelBuilder.Entity<FrameEntity>().ToTable("Frames");
 
 
 
@@ -33,6 +38,11 @@ namespace OpticalsWholesaleandRetail.Models.Entity
         public DbSet<Suppliers> suppliersEntity { get; set; }
         public DbSet<OrderItemEntity> OrderItemEntities { get; set; }
         public DbSet<OrdersEntity> ordersEntities { get; set; }
+        public DbSet<FrameBrandEntity> fBrandEntity { get; set; }
+        public DbSet<FrameModelEntity> fModelEntity { get; set; }
+        public DbSet<FrameSizeEntity> fSizeEntity { get; set; }
+        public DbSet<FrameCategoryEntity> fCategoryEntities { get; set; }
+        public DbSet<FrameEntity> frameEntities { get; set; }
 
 
         //public void CreateDynamicTable(string tableName, List<string> subjects)
