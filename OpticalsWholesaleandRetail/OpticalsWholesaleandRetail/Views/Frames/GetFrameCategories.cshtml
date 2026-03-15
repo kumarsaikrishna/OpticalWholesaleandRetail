@@ -1,0 +1,277 @@
+﻿@model IEnumerable< OpticalsWholesaleandRetail.Models.DTO.FrameCategoryDto >
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int sno = 1;
+}
+
+<div class="container mt-4">
+
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between">
+
+            <h4>Frame Categories</h4>
+
+            <button class="btn btn-primary"
+                    onclick="openAddModal()">
+
+                Add Category
+
+            </button>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Category</th>
+                        <th>Supplier</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@sno</td>
+
+                            <td>@item.CategoryName</td>
+
+                            <td>@item.SupplierName</td>
+
+                            <td>
+
+                                <button class="btn btn-sm btn-primary"
+                                        onclick="EditCategory('@item.CategoryId','@item.CategoryName','@item.SupplierId')">
+
+                                    Edit
+
+                                </button>
+
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="DeleteCategory('@item.CategoryId')">
+
+                                    Delete
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                        sno++;
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ADD MODAL -->
+
+<div class="modal fade" id="addModal">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form id="addForm">
+
+                <div class="modal-header">
+
+                    <h5>Add Category</h5>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <label>Category Name</label>
+
+                    <input type="text"
+                           name="CategoryName"
+                           class="form-control" />
+
+                    <label class="mt-2">Supplier</label>
+
+                    <select name="SupplierId"
+                            class="form-control">
+
+                        <option value="">Select</option>
+
+                        @foreach (var s in ViewBag.Supplier)
+                        {
+                            <option value="@s.SupplierId">@s.ContactPerson</option>
+                        }
+
+                    </select>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-primary">Save</button>
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">
+
+                        Close
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function openAddModal(){
+
+$('#addModal').modal('show');
+
+}
+
+$('#addForm').submit(function(e){
+
+e.preventDefault();
+
+$.post('/FrameCategory/AddFrameCategory',
+$(this).serialize(),
+
+function(res){
+
+if(res.success){
+
+location.reload();
+
+}
+
+});
+
+});
+
+function EditCategory(id,name,supplier){
+
+var html=`<div class="modal fade" id="editModal">
+<div class="modal-dialog">
+<div class="modal-content">
+
+<form id="editForm">
+
+<input type="hidden" name="CategoryId" value="${id}"/>
+
+<div class="modal-header">
+<h5>Edit Category</h5>
+</div>
+
+<div class="modal-body">
+
+<label>Category Name</label>
+
+<input type="text"
+name="CategoryName"
+value="${name}"
+class="form-control"/>
+
+<label class="mt-2">Supplier</label>
+
+<select name="SupplierId"
+class="form-control">
+
+<option value="">Select</option>
+
+@foreach(var s in ViewBag.Supplier)
+{
+<option value="@s.SupplierId">@s.ContactPerson</option>
+}
+
+</select>
+
+</div>
+
+<div class="modal-footer">
+
+<button class="btn btn-primary">
+
+Update
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+</div>
+</div>`;
+
+$('body').append(html);
+
+$('#editModal').modal('show');
+
+$('#editForm').submit(function(e){
+
+e.preventDefault();
+
+$.post('/FrameCategory/UpdateFrameCategory',
+$(this).serialize(),
+
+function(res){
+
+if(res.success){
+
+location.reload();
+
+}
+
+});
+
+});
+
+}
+
+function DeleteCategory(id){
+
+if(confirm("Delete this Category?")){
+
+$.post('/FrameCategory/DeleteFrameCategory/'+id,
+
+function(res){
+
+if(res.success){
+
+location.reload();
+
+}
+
+});
+
+}
+
+}
+
+</script>

@@ -12,7 +12,7 @@ namespace OpticalsWholesaleandRetail.Models.DTO
         public string CategoryName { get; set; }
 
         public int? SupplierId { get; set; }
-
+        public string SupplierName { get; set; }
         public bool? IsDeleted { get; set; }
     }
 }

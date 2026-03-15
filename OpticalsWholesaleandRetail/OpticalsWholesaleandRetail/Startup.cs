@@ -53,6 +53,7 @@ namespace OpticalsWholesaleandRetail
 
             // Repository
             services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<IFramesRepo, FramesRepo>();
 
             // Authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
