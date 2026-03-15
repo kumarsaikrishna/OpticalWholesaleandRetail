@@ -1,0 +1,414 @@
+﻿@model IEnumerable<OpticalsWholesaleandRetail.Models.DTO.FrameSizeDto>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int sno = 1;
+}
+
+<style>
+    .required {
+        color: red;
+    }
+
+    .modal-dialog {
+        max-width: 90%;
+        width: 90%;
+    }
+
+    th {
+        font-weight: bold;
+    }
+</style>
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="container-full">
+
+            <div class="col-md-12 mt-3">
+
+                <div class="card">
+
+                    <div class="card-header d-flex justify-content-between align-items-center">
+
+                        <h4 class="card-title mb-0">Frame Sizes</h4>
+
+                        <input type="text"
+                               id="searchInput"
+                               class="form-control"
+                               placeholder="Search Size..."
+                               style="width:300px;" />
+
+                        <button class="btn btn-primary"
+                                onclick="openAddModal()">
+
+                            <i class="fa fa-plus"></i> Add Size
+
+                        </button>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>#</th>
+                                        <th>Size Name</th>
+                                        <th>Supplier</th>
+                                        <th>Action</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="sizeTableBody">
+
+                                    @foreach (var item in Model)
+                                    {
+
+                                        <tr>
+
+                                            <td>@sno</td>
+
+                                            <td>@item.SizeName</td>
+
+                                            <td>@item.SupplierId</td>
+
+                                            <td>
+
+                                                <button class="btn btn-circle btn-primary btn-xs"
+                                                        onclick="EditSize('@item.SizeId','@item.SizeName','@item.SupplierId')">
+
+                                                    <i class="fa fa-edit"></i>
+
+                                                </button>
+
+                                                <button class="btn btn-circle btn-danger btn-xs"
+                                                        onclick="DeleteSize('@item.SizeId')">
+
+                                                    <i class="fa fa-trash"></i>
+
+                                                </button>
+
+                                            </td>
+
+                                        </tr>
+
+                                        sno++;
+
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        <ul id="pagination" class="pagination justify-content-end"></ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD SIZE MODAL -->
+
+<div class="modal fade" id="addModal">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>Add Frame Size</h5>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form id="sizeForm">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <label>Size Name <span class="required">*</span></label>
+
+                            <input type="text"
+                                   name="SizeName"
+                                   class="form-control"
+                                   required />
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label>Supplier</label>
+
+                            <select name="SupplierId"
+                                    class="form-control">
+
+                                <option value="">--Select Supplier--</option>
+
+                                @foreach (var s in ViewBag.Supplier)
+                                {
+                                    <option value="@s.SupplierId">@s.ContactPerson</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer mt-3">
+
+                        <button type="submit"
+                                class="btn btn-primary">
+
+                            Save
+
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-danger"
+                                data-dismiss="modal">
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT SIZE MODAL -->
+
+<div class="modal fade" id="editSizeModal">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>Edit Frame Size</h5>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form id="editSizeForm">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           id="editSizeId"
+                           name="SizeId" />
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <label>Size Name</label>
+
+                            <input type="text"
+                                   id="editSizeName"
+                                   name="SizeName"
+                                   class="form-control" />
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label>Supplier</label>
+
+                            <select id="editSupplierId"
+                                    name="SupplierId"
+                                    class="form-control">
+
+                                <option value="">--Select Supplier--</option>
+
+                                @foreach (var s in ViewBag.Supplier)
+                                {
+                                    <option value="@s.SupplierId">@s.ContactPerson</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer mt-3">
+
+                        <button type="submit"
+                                class="btn btn-primary">
+
+                            Update
+
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-danger"
+                                data-dismiss="modal">
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+function openAddModal(){
+$('#addModal').modal('show');
+}
+
+function EditSize(id,name,supplierId){
+
+$('#editSizeId').val(id);
+$('#editSizeName').val(name);
+$('#editSupplierId').val(supplierId);
+
+$('#editSizeModal').modal('show');
+
+}
+
+$('#sizeForm').submit(function(e){
+
+e.preventDefault();
+
+var formData = new FormData(this);
+
+$.ajax({
+
+url:'/FrameSize/AddFrameSize',
+type:'POST',
+data:formData,
+processData:false,
+contentType:false,
+
+success:function(res){
+
+if(res.success){
+
+Swal.fire("Success","Size Added Successfully","success")
+.then(()=>location.reload());
+
+}else{
+
+Swal.fire("Error",res.message,"error");
+
+}
+
+}
+
+});
+
+});
+
+$('#editSizeForm').submit(function(e){
+
+e.preventDefault();
+
+var formData = new FormData(this);
+
+$.ajax({
+
+url:'/Frames/UpdateFrameSize',
+type:'POST',
+data:formData,
+processData:false,
+contentType:false,
+
+success:function(res){
+
+if(res.success){
+
+Swal.fire("Updated","Size Updated","success")
+.then(()=>location.reload());
+
+}
+
+}
+
+});
+
+});
+
+function DeleteSize(id){
+
+Swal.fire({
+
+title:"Are you sure?",
+text:"You won't be able to revert this!",
+icon:"warning",
+showCancelButton:true,
+confirmButtonColor:"#d33",
+cancelButtonColor:"#3085d6",
+confirmButtonText:"Yes, delete it!"
+
+}).then((result)=>{
+
+if(result.isConfirmed){
+
+$.ajax({
+
+url:'/Frames/DeleteFrameSize/'+id,
+type:'POST',
+
+success:function(res){
+
+if(res.success){
+
+Swal.fire("Deleted","Size Deleted","success")
+.then(()=>location.reload());
+
+}
+
+}
+
+});
+
+}
+
+});
+
+}
+
+$('#searchInput').on('keyup',function(){
+
+var value=$(this).val().toLowerCase();
+
+$("#sizeTableBody tr").filter(function(){
+
+$(this).toggle($(this).text().toLowerCase().indexOf(value)>-1)
+
+});
+
+});
+
+</script>

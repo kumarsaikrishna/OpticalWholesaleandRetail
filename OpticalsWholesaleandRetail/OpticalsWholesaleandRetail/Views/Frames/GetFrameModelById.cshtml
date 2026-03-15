@@ -1,0 +1,422 @@
+﻿@model IEnumerable<OpticalsWholesaleandRetail.Models.DTO.FrameModelDto>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int sno = 1;
+}
+
+<style>
+    .required {
+        color: red;
+    }
+
+    .modal-dialog {
+        max-width: 90%;
+        width: 90%;
+    }
+
+    th {
+        font-weight: bold;
+    }
+</style>
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="container-full">
+
+            <div class="col-md-12 mt-3">
+                <div class="card">
+
+                    <div class="card-header d-flex justify-content-between align-items-center">
+
+                        <h4 class="card-title mb-0">Frame Models</h4>
+
+                        <input type="text" id="searchInput" class="form-control"
+                               placeholder="Search Models..." style="width:300px;" />
+
+                        <button class="btn btn-primary" onclick="openAddModal()">
+                            <i class="fa fa-plus"></i> Add Model
+                        </button>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped">
+
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Brand</th>
+                                        <th>Model Number</th>
+                                        <th>Frame Size</th>
+                                        <th>Color</th>
+                                        <th>Material</th>
+                                        <th>Frame Type</th>
+                                        <th>Gender</th>
+                                        <th>Purchase Price</th>
+                                        <th>Selling Price</th>
+                                        <th>Stock</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="modelTableBody">
+
+                                    @foreach (var models in Model)
+                                    {
+                                        <tr>
+
+                                            <td>@sno</td>
+                                            <td>@models.BrandName</td>
+                                            <td>@models.ModelNumber</td>
+                                            <td>@models.FrameSizeId</td>
+                                            <td>@models.Color</td>
+                                            <td>@models.Material</td>
+                                            <td>@models.FrameType</td>
+                                            <td>@models.GenderType</td>
+                                            <td>@models.PurchasePrice</td>
+                                            <td>@models.SellingPrice</td>
+                                            <td>@models.StockQuantity</td>
+
+                                            <td>
+
+                                                <button class="btn btn-circle btn-primary btn-xs"
+                                                        onclick="EditModel('@models.ModelId',
+'@models.BrandId',
+'@models.ModelNumber',
+'@models.FrameSizeId',
+'@models.Color',
+'@models.Material',
+'@models.FrameType',
+'@models.GenderType',
+'@models.PurchasePrice',
+'@models.SellingPrice',
+'@models.StockQuantity')">
+
+                                                    <i class="fa fa-edit"></i>
+
+                                                </button>
+
+                                                <button class="btn btn-circle btn-danger btn-xs"
+                                                        onclick="DeleteModel('@models.ModelId')">
+
+                                                    <i class="fa fa-trash"></i>
+
+                                                </button>
+
+                                            </td>
+
+                                        </tr>
+
+                                        sno++;
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD MODEL MODAL -->
+
+<div class="modal fade" id="addModal">
+
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Add Frame Model</h5>
+            </div>
+
+            <div class="modal-body">
+
+                <form id="modelForm">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <label>Brand <span class="required">*</span></label>
+
+                            <select name="BrandId" class="form-control">
+
+                                <option value="">--Select Brand--</option>
+
+                                @foreach (var b in ViewBag.Brands)
+                                {
+                                    <option value="@b.BrandId">@b.BrandName</option>
+                                }
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Model Number</label>
+                            <input type="text" name="ModelNumber" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Frame Size</label>
+
+                            <select name="FrameSizeId" class="form-control">
+
+                                <option value="">--Select Size--</option>
+
+                                @foreach (var s in ViewBag.FrameSizes)
+                                {
+                                    <option value="@s.FrameSizeId">@s.SizeName</option>
+                                }
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Color</label>
+                            <input type="text" name="Color" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Material</label>
+                            <input type="text" name="Material" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Frame Type</label>
+
+                            <select name="FrameType" class="form-control">
+                                <option>Full Rim</option>
+                                <option>Half Rim</option>
+                                <option>Rimless</option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Gender Type</label>
+
+                            <select name="GenderType" class="form-control">
+                                <option>Men</option>
+                                <option>Women</option>
+                                <option>Unisex</option>
+                                <option>Kids</option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Purchase Price</label>
+                            <input type="number" name="PurchasePrice" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Selling Price</label>
+                            <input type="number" name="SellingPrice" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Stock Quantity</label>
+                            <input type="number" name="StockQuantity" class="form-control" />
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="submit" class="btn btn-primary">Save</button>
+
+                        <button type="button" class="btn btn-danger"
+                                data-dismiss="modal">
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT MODEL MODAL -->
+
+<div class="modal fade" id="editModelModal">
+
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Edit Frame Model</h5>
+            </div>
+
+            <div class="modal-body">
+
+                <form id="editModelForm">
+
+                    <input type="hidden" id="editModelId" name="ModelId" />
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <label>Brand</label>
+
+                            <select id="editBrandId" name="BrandId" class="form-control">
+
+                                @foreach (var b in ViewBag.Brands)
+                                {
+                                    <option value="@b.BrandId">@b.BrandName</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Model Number</label>
+                            <input type="text" id="editModelNumber" name="ModelNumber" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+
+                            <label>Frame Size</label>
+
+                            <select id="editFrameSizeId" name="FrameSizeId" class="form-control">
+
+                                @foreach (var s in ViewBag.FrameSizes)
+                                {
+                                    <option value="@s.FrameSizeId">@s.SizeName</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Color</label>
+                            <input type="text" id="editColor" name="Color" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Material</label>
+                            <input type="text" id="editMaterial" name="Material" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Frame Type</label>
+                            <input type="text" id="editFrameType" name="FrameType" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Gender Type</label>
+                            <input type="text" id="editGenderType" name="GenderType" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Purchase Price</label>
+                            <input type="number" id="editPurchasePrice" name="PurchasePrice" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Selling Price</label>
+                            <input type="number" id="editSellingPrice" name="SellingPrice" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Stock Quantity</label>
+                            <input type="number" id="editStockQuantity" name="StockQuantity" class="form-control" />
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="submit" class="btn btn-primary">Update</button>
+
+                        <button type="button" class="btn btn-danger"
+                                data-dismiss="modal">
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function openAddModal() {
+        $('#addModal').modal('show');
+    }
+
+    function EditModel(id, brandId, modelNumber, frameSizeId, color, material, frameType, gender, purchase, selling, stock) {
+
+        $('#editModelId').val(id);
+        $('#editBrandId').val(brandId);
+        $('#editModelNumber').val(modelNumber);
+        $('#editFrameSizeId').val(frameSizeId);
+        $('#editColor').val(color);
+        $('#editMaterial').val(material);
+        $('#editFrameType').val(frameType);
+        $('#editGenderType').val(gender);
+        $('#editPurchasePrice').val(purchase);
+        $('#editSellingPrice').val(selling);
+        $('#editStockQuantity').val(stock);
+
+        $('#editModelModal').modal('show');
+
+    }
+
+    function DeleteModel(id) {
+
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                $.post('/FrameModel/DeleteFrameModel/' + id, function (res) {
+
+                    if (res.success) {
+                        Swal.fire("Deleted", "Model Deleted", "success")
+                            .then(() => location.reload());
+                    }
+
+                });
+
+            }
+
+        });
+
+    }
+
+    $('#searchInput').on('keyup', function () {
+
+        var value = $(this).val().toLowerCase();
+
+        $("#modelTableBody tr").filter(function () {
+
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+
+        });
+
+    });
+
+</script>

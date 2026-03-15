@@ -1,0 +1,560 @@
+﻿@model IEnumerable< OpticalsWholesaleandRetail.Models.DTO.FrameDto >
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int sno = 1;
+}
+
+<div class="container mt-4">
+
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between">
+
+            <h4>Frames Inventory</h4>
+
+            <div>
+
+                <input type="text" id="searchInput" class="form-control" placeholder="Search..." style="width:250px; display:inline-block" />
+
+                <button class="btn btn-primary"
+                        onclick="openAddModal()">
+
+                    Add Frame
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Size</th>
+                        <th>Category</th>
+                        <th>Supplier</th>
+                        <th>Cost</th>
+                        <th>Selling</th>
+                        <th>Stock</th>
+                        <th>Reorder</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="frameTable">
+
+                    @foreach (var item in Model)
+                    {
+
+                        <tr>
+
+                            <td>@sno</td>
+
+                            <td>@item.BrandName</td>
+                            <td>@item.ModelNumber</td>
+                            <td>@item.CategoryName</td>
+                            <td>@item.SupplierName</td>
+                            <td>@item.CostPrice</td>
+                            <td>@item.SellingPrice</td>
+                            <td>@item.StockQty</td>
+                            <td>@item.ReorderLevel</td>
+
+                            <td>
+
+                                <button class="btn btn-sm btn-primary"
+                                        onclick="EditFrame('@item.FrameId',
+'@item.BrandId',
+'@item.ModelId',
+'@item.CategoryId',
+'@item.SupplierId',
+'@item.CostPrice',
+'@item.SellingPrice',
+'@item.StockQty',
+'@item.ReorderLevel')">
+
+                                    Edit
+
+                                </button>
+
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="DeleteFrame('@item.FrameId')">
+
+                                    Delete
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                        sno++;
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ADD FRAME MODAL -->
+
+<div class="modal fade" id="addModal">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <form id="frameForm">
+
+                <div class="modal-header">
+
+                    <h5>Add Frame</h5>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <label>Brand</label>
+
+                            <select name="BrandId" class="form-control">
+
+                                <option value="">Select</option>
+
+                                @foreach (var b in ViewBag.Brands)
+                                {
+                                    <option value="@b.BrandId">@b.BrandName</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Model</label>
+
+                            <select name="ModelId" class="form-control">
+
+                                <option value="">Select</option>
+
+                                @foreach (var m in ViewBag.Models)
+                                {
+                                    <option value="@m.ModelId">@m.ModelNumber</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Size</label>
+
+                            <select name="SizeId" class="form-control">
+
+                                <option value="">Select</option>
+
+                                @foreach (var s in ViewBag.Sizes)
+                                {
+                                    <option value="@s.SizeId">@s.SizeName</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <label>Category</label>
+
+                            <select name="CategoryId" class="form-control">
+
+                                <option value="">Select</option>
+
+                                @foreach (var c in ViewBag.Categories)
+                                {
+                                    <option value="@c.CategoryId">@c.CategoryName</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Supplier</label>
+
+                            <select name="SupplierId" class="form-control">
+
+                                <option value="">Select</option>
+
+                                @foreach (var s in ViewBag.Suppliers)
+                                {
+                                    <option value="@s.SupplierId">@s.ContactPerson</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Cost Price</label>
+
+                            <input type="number" name="CostPrice" class="form-control" />
+
+                        </div>
+
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <label>Selling Price</label>
+
+                            <input type="number" name="SellingPrice" class="form-control" />
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Stock Qty</label>
+
+                            <input type="number" name="StockQty" class="form-control" />
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Reorder Level</label>
+
+                            <input type="number" name="ReorderLevel" class="form-control" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-primary">Save</button>
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">
+
+                        Close
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- EDIT FRAME MODAL -->
+
+<div class="modal fade" id="editModal">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <form id="editForm">
+
+                <input type="hidden" name="FrameId" id="editFrameId" />
+
+                <div class="modal-header">
+
+                    <h5>Edit Frame</h5>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <label>Brand</label>
+
+                            <select name="BrandId" id="editBrand" class="form-control">
+
+                                @foreach (var b in ViewBag.Brands)
+                                {
+                                    <option value="@b.BrandId">@b.BrandName</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Model</label>
+
+                            <select name="ModelId" id="editModel" class="form-control">
+
+                                @foreach (var m in ViewBag.Models)
+                                {
+                                    <option value="@m.ModelId">@m.ModelNumber</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Size</label>
+
+                            <select name="SizeId" id="editSize" class="form-control">
+
+                                @foreach (var s in ViewBag.Sizes)
+                                {
+                                    <option value="@s.SizeId">@s.SizeName</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <label>Category</label>
+
+                            <select name="CategoryId" id="editCategory" class="form-control">
+
+                                @foreach (var c in ViewBag.Categories)
+                                {
+                                    <option value="@c.CategoryId">@c.CategoryName</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Supplier</label>
+
+                            <select name="SupplierId" id="editSupplier" class="form-control">
+
+                                @foreach (var s in ViewBag.Suppliers)
+                                {
+                                    <option value="@s.SupplierId">@s.ContactPerson</option>
+                                }
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Cost Price</label>
+
+                            <input type="number" name="CostPrice" id="editCost" class="form-control" />
+
+                        </div>
+
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <label>Selling Price</label>
+
+                            <input type="number" name="SellingPrice" id="editSell" class="form-control" />
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Stock</label>
+
+                            <input type="number" name="StockQty" id="editStock" class="form-control" />
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label>Reorder</label>
+
+                            <input type="number" name="ReorderLevel" id="editReorder" class="form-control" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-primary">Update</button>
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">
+
+                        Close
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function openAddModal(){
+$('#addModal').modal('show');
+}
+
+
+function EditFrame(id,brand,model,size,cat,supplier,cost,sell,stock,reorder){
+
+$('#editFrameId').val(id);
+
+$('#editBrand').val(brand);
+$('#editModel').val(model);
+$('#editSize').val(size);
+$('#editCategory').val(cat);
+$('#editSupplier').val(supplier);
+
+$('#editCost').val(cost);
+$('#editSell').val(sell);
+$('#editStock').val(stock);
+$('#editReorder').val(reorder);
+
+$('#editModal').modal('show');
+
+}
+
+
+$("#frameForm").submit(function(e){
+
+e.preventDefault();
+
+$.post('/Frame/AddFrame',
+$(this).serialize(),
+
+function(res){
+
+if(res.success){
+
+location.reload();
+
+}
+
+});
+
+});
+
+
+$("#editForm").submit(function(e){
+
+e.preventDefault();
+
+$.post('/Frame/UpdateFrame',
+$(this).serialize(),
+
+function(res){
+
+if(res.success){
+
+location.reload();
+
+}
+
+});
+
+});
+
+
+function DeleteFrame(id){
+
+if(confirm("Delete this frame?")){
+
+$.post('/Frame/DeleteFrame/'+id,
+
+function(res){
+
+if(res.success){
+
+location.reload();
+
+}
+
+});
+
+}
+
+}
+
+
+$("#searchInput").on("keyup", function() {
+
+var value = $(this).val().toLowerCase();
+
+$("#frameTable tr").filter(function() {
+
+$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+
+});
+
+});
+
+</script>

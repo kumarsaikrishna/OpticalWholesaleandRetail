@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<OpticalsWholesaleandRetail.Models.DTO.FrameBrandDto>
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     int sno = 1;
 }
+
 <style>
     .required {
         color: red;
@@ -17,66 +19,90 @@
         font-weight: bold;
     }
 </style>
+
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="container-full">
 
             <div class="col-md-12 mt-3">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title mb-0">Frame Brands</h4>
-                        <input type="text" id="searchInput" class="form-control" placeholder="Search Classes..." style="width: 300px;" />
 
-                        <button type="button" onclick="openAddModal()" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
-                            <i class="fa fa-plus"></i> Add FrameBrand
+                    <div class="card-header d-flex justify-content-between align-items-center">
+
+                        <h4 class="card-title mb-0">Frame Brands</h4>
+
+                        <input type="text" id="searchInput" class="form-control"
+                               placeholder="Search Brands..." style="width:300px;" />
+
+                        <button class="btn btn-primary" onclick="openAddModal()">
+                            <i class="fa fa-plus"></i> Add Brand
                         </button>
+
                     </div>
 
                     <div class="card-body">
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="list" role="tabpanel">
-                                <!-- Table -->
-                                <div class="table-responsive">
-                                    <table id="userTypeTable" class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Brand Name</th>
-                                                <th>Category</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="classTableBody">
-                                            @foreach (var item in Model)
-                                            {
-                                            <tr>
-                                                <td>@sno</td>
-                                                <td>@item.BrandName</td>
-                                                <td>@item.Category</td>
-                                                <td>
-                                                    <a href="#" onclick="EditFrameBrand('@item.BrandId', '@item.BrandName',@item.Category,@item.SupplierId)" class="text-primary">
-                                                        <button type="button" class="btn btn-circle btn-primary btn-xs">
-                                                            <i class="fa fa-edit"></i>
-                                                        </button>
-                                                    </a>
-                                                    <a href="#" onclick="DeleteFrameBrand(@item.BrandId)">
-                                                        <button type="button" class="btn btn-circle btn-danger btn-xs">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </a>
 
-                                                </td>
-                                            </tr>
-                                                sno++;
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- Pagination Controls -->
-                                <ul id="pagination" class="pagination justify-content-end"></ul>
+                        <div class="table-responsive">
 
-                            </div>
+                            <table class="table table-striped">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Brand Name</th>
+                                        <th>Category</th>
+                                        <th>Supplier</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="brandTableBody">
+
+                                    @foreach (var brand in Model)
+                                    {
+                                        <tr>
+
+                                            <td>@sno</td>
+
+                                            <td>@brand.BrandName</td>
+
+                                            <td>@brand.Category</td>
+
+                                            <td>@brand.SupplierName</td>
+
+                                            <td>
+
+                                                <button class="btn btn-circle btn-primary btn-xs"
+                                                        onclick="EditBrand('@brand.BrandId','@brand.BrandName','@brand.Category','@brand.SupplierId')">
+
+                                                    <i class="fa fa-edit"></i>
+
+                                                </button>
+
+                                                <button class="btn btn-circle btn-danger btn-xs"
+                                                        onclick="DeleteBrand('@brand.BrandId')">
+
+                                                    <i class="fa fa-trash"></i>
+
+                                                </button>
+
+                                            </td>
+
+                                        </tr>
+
+                                        sno++;
+                                    }
+
+                                </tbody>
+
+                            </table>
+
                         </div>
+
+                        <ul id="pagination" class="pagination justify-content-end"></ul>
+
                     </div>
                 </div>
             </div>
@@ -84,160 +110,264 @@
     </div>
 </div>
 
+<!-- ADD BRAND MODAL -->
 
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl custom-modal" role="document">
-        <!-- Added modal-xl and custom class -->
+<div class="modal fade" id="addModal">
+
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
+
             <div class="modal-header">
-                <h5 class="modal-title" id="addModalLabel">Add UserType</h5>
+                <h5>Add Frame Brand</h5>
             </div>
+
             <div class="modal-body">
-                <form id="framebrandForm" action="@Url.Action("AddFrameBrands", "Frames")" method="post" enctype="multipart/form-data">
+
+                <form id="brandForm">
+
                     @Html.AntiForgeryToken()
 
                     <div class="row">
-                        <div class="col-lg-12">
-                            <h5 class="mb-3" style="background-color: whitesmoke; color: black; padding: 10px; text-transform: uppercase;">Frame Brand Details</h5>
+
+                        <div class="col-md-6">
+
+                            <label>Brand Name <span class="required">*</span></label>
+
+                            <input type="text"
+                                   name="BrandName"
+                                   class="form-control"
+                                   required />
+
                         </div>
-                        <div class="col-lg-6">
-                            <label for="Name">Brand Name <span class="required">*</span></label>
-                            <input type="text" class="form-control" id="BrandName" name="BrandName" required placeholder="Enter Brand Name" />
+
+                        <div class="col-md-6">
+
+                            <label>Category</label>
+
+                            <select name="Category" class="form-control">
+
+                                <option value="">Select</option>
+                                <option value="Metal">Metal</option>
+                                <option value="Plastic">Plastic</option>
+                                <option value="Rimless">Rimless</option>
+
+                            </select>
+
                         </div>
-                        <div class="col-lg-6">
-                            <label for="Category">Category <span class="required">*</span></label>
-                            <input type="text" class="form-control" id="Category" name="Category" required placeholder="Enter Category" />
+
+                        <div class="col-md-6 mt-3">
+
+                            <label>Supplier</label>
+
+                            <select name="SupplierId" class="form-control">
+
+                                <option value="">Select Supplier</option>
+
+                                @foreach (var item in ViewBag.Suppliers)
+                                {
+                                    <option value="@item.SupplierId">@item.ContactPerson</option>
+                                }
+
+                            </select>
+
                         </div>
+
                     </div>
 
-                    <!-- In both addModal and editModal footer sections -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <button type="button" class="btn btn-danger" onclick="cancelAndRedirect()">Cancel</button>
+
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                        </button>
+
+                        <button type="button" class="btn btn-danger"
+                                data-dismiss="modal">
+                            Cancel
+                        </button>
+
                     </div>
+
                 </form>
+
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="editFrameBrandModal" tabindex="-1" aria-labelledby="editFrameBrandLabel" aria-hidden="true">
+
+<!-- EDIT BRAND MODAL -->
+
+<div class="modal fade" id="editBrandModal">
+
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
+
             <div class="modal-header">
-                <h5 class="modal-title" id="editFrameBrandModalLabel">Edit Frame Brand</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5>Edit Frame Brand</h5>
             </div>
+
             <div class="modal-body">
-                <form id="editFrameBrandForm" action="@Url.Action("UpdateFrameBrand", "Frames")" method="post" enctype="multipart/form-data">
+
+                <form id="editBrandForm">
+
                     @Html.AntiForgeryToken()
-                    <input type="hidden" name="BrandId" id="editBrandId" value="" />
+
+                    <input type="hidden" id="editBrandId" name="BrandId" />
+
                     <div class="row">
-                        <div class="col-lg-12">
-                            <h5 class="mb-3" style="background-color: whitesmoke; color: black; padding: 10px; text-transform: uppercase;">Frand Brand Details</h5>
-                        </div>
-                        <div class="col-lg-6">
-                            <label for="editBrandName">Brand Name <span class="required">*</span></label>
-                            <input type="text" class="form-control" id="editBrandName" name="BrandName" required placeholder="Enter Brand Name" />
-                        </div>
-                        <div class="col-lg-6">
-                            <label for="editCategory">Category <span class="required">*</span></label>
-                            <input type="text" class="form-control" id="editCategory" name="Category" required placeholder="Enter Category" />
-                        </div>
-                    </div>
-                    <div class="row mt-3">
+
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary">Update</button>
-                            <button type="reset" class="btn btn-success">Reset</button>
-                            <button type="button" class="btn btn-danger" onclick="cancelAndRedirects()">Cancel</button>
+
+                            <label>Brand Name</label>
+
+                            <input type="text"
+                                   id="editBrandName"
+                                   name="BrandName"
+                                   class="form-control" />
+
                         </div>
+
+                        <div class="col-md-6">
+
+                            <label>Category</label>
+
+                            <select id="editCategory"
+                                    name="Category"
+                                    class="form-control">
+
+                                <option value="Metal">Metal</option>
+                                <option value="Plastic">Plastic</option>
+                                <option value="Rimless">Rimless</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+
+                            <label>Supplier</label>
+
+                            <select id="editSupplierId"
+                                    name="SupplierId"
+                                    class="form-control">
+
+                                <option value="">Select Supplier</option>
+
+                                @foreach (var item in ViewBag.Suppliers)
+                                {
+                                    <option value="@item.SupplierId">@item.ContactPerson</option>
+                                }
+
+                            </select>
+
+                        </div>
+
                     </div>
+
+                    <div class="modal-footer">
+
+                        <button type="submit" class="btn btn-primary">
+                            Update
+                        </button>
+
+                        <button type="button" class="btn btn-danger"
+                                data-dismiss="modal">
+                            Cancel
+                        </button>
+
+                    </div>
+
                 </form>
+
             </div>
         </div>
     </div>
 </div>
 
 <script>
-     $(document).ready(function () {
 
-        window.openAddModal = function () {
-            $('#addModal').modal('show');
-        };
+    function openAddModal() {
 
-    });
-    $('#framebrandForm').submit(function (e) {
+        $('#addModal').modal('show');
+
+    }
+
+    function EditBrand(id, name, category, supplierId) {
+
+        $('#editBrandId').val(id);
+        $('#editBrandName').val(name);
+        $('#editCategory').val(category);
+        $('#editSupplierId').val(supplierId);
+
+        $('#editBrandModal').modal('show');
+
+    }
+
+    $('#brandForm').submit(function (e) {
+
         e.preventDefault();
+
         var formData = new FormData(this);
 
         $.ajax({
+
             url: '/Frames/AddFrameBrands',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
-            success: function (response) {
-                if (response.success) {
-                    Swal.fire("Success!", "Frame Brands added successfully.", "success")
-                        .then(() => {
-                            window.location.reload();
-                        });
+
+            success: function (res) {
+
+                if (res.success) {
+
+                    Swal.fire("Success", "Brand Added Successfully", "success")
+                        .then(() => location.reload());
+
                 } else {
-                    Swal.fire("Error!", response.message || "Frame Brand already exists.", "error");
+
+                    Swal.fire("Error", res.message, "error");
+
                 }
-            },
-            error: function () {
-                Swal.fire("Error!", "There was an error processing your request.", "error");
+
             }
+
         });
+
     });
 
+    $('#editBrandForm').submit(function (e) {
 
-        // Edit User Type Form Submission
-    $('#editFrameBrandForm').submit(function (e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            $.ajax({
-                url: '/Frames/UpdateFrameBrand',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire("Updated!", "Frame Brand updated successfully.", "success").then(() => {
-                            $('#editFrameBrandModal').modal('hide');
-                            window.location.reload();
-                        });
-                    } else {
-                        Swal.fire("Error!", response.message || "Failed to update Frame Brand.", "error");
-                    }
-                },
-                error: function () {
-                    Swal.fire("Error!", "An error occurred while updating the Frame Brand.", "error");
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+
+            url: '/Frames/UpdateFrameBrand',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+
+            success: function (res) {
+
+                if (res.success) {
+
+                    Swal.fire("Updated", "Brand Updated", "success")
+                        .then(() => location.reload());
+
                 }
-            });
+
+            }
+
         });
 
+    });
 
-    // Edit User Type Function
-    function EditFrameBrand(BrandId, BrandName,Category,SupplierId) {
-        console.log("Editing User Type:", BrandId, BrandName,Category,SupplierId);
+    function DeleteBrand(id) {
 
-        // Set the hidden ID field
-        $("#editBrandId").val(BrandId);
-
-        // Set other values
-        $("#editBrandName").val(BrandName);
-        $("#editCategory").val(Category);
-        $("#editSupplierId").val(SupplierId);
-
-        // Show the edit modal
-        $('#editFrameBrandModal').modal('show');
-    }
-
-    // Delete User Type Function
-    function DeleteFrameBrand(BrandId) {
         Swal.fire({
+
             title: "Are you sure?",
             text: "You won't be able to revert this!",
             icon: "warning",
@@ -245,59 +375,49 @@
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
             confirmButtonText: "Yes, delete it!"
+
         }).then((result) => {
+
             if (result.isConfirmed) {
+
                 $.ajax({
-                    url: '/Frames/DeleteFrameBrand/' + BrandId,
+
+                    url: '/Frames/DeleteFrameBrand/' + id,
                     type: 'POST',
-                    success: function (response) {
-                        if (response.success) {
-                            Swal.fire("Deleted!", "Frame Brand has been deleted.", "success").then(() => {
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire("Error!", response.message || "There was an issue deleting the Frame Brand.", "error");
+
+                    success: function (res) {
+
+                        if (res.success) {
+
+                            Swal.fire("Deleted", "Brand Deleted", "success")
+                                .then(() => location.reload());
+
                         }
-                    },
-                    error: function () {
-                        Swal.fire("Error!", "There was an error processing your request.", "error");
+
                     }
+
                 });
+
             }
+
         });
+
     }
 
-        //search field in table
     $(document).ready(function () {
+
         $('#searchInput').on('keyup', function () {
+
             var value = $(this).val().toLowerCase();
-            $("#classTableBody tr").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+
+            $("#brandTableBody tr").filter(function () {
+
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+
             });
+
         });
+
     });
-
-      $(document).ready(function () {
-        setupPagination('classTableBody', 'pagination');
-    });
-
-        //Cancel Button
-        function cancelAndRedirect() {
-        $('#addModal').modal('hide'); // Hides the modal
-
-        // Wait a bit to allow modal animation to finish before redirecting
-        setTimeout(function () {
-            window.location.href = '@Url.Action("GetFrames", "Frames")';
-        }, 300); // 300ms matches Bootstrap's fade animation
-       }
-       function cancelAndRedirects() {
-        $('#editFrameBrandModal').modal('hide'); // Hides the modal
-
-        // Wait a bit to allow modal animation to finish before redirecting
-        setTimeout(function () {
-            window.location.href = '@Url.Action("GetFrames", "Frames")';
-        }, 300); // 300ms matches Bootstrap's fade animation
-    }
 
 </script>
-
