@@ -26,6 +26,12 @@ namespace OpticalsWholesaleandRetail.Models.Entity
             modelBuilder.Entity<FrameSizeEntity>().ToTable("FrameSizes");
             modelBuilder.Entity<FrameCategoryEntity>().ToTable("FrameCategories");
             modelBuilder.Entity<FrameEntity>().ToTable("Frames");
+            modelBuilder.Entity<LensTypeEntity>().ToTable("LensTypes");
+            modelBuilder.Entity<LensCategoryEntity>().ToTable("LensCategories");
+            modelBuilder.Entity<LensMaterialEntity>().ToTable("LensMaterials");
+            modelBuilder.Entity<LensIndexEntity>().ToTable("LensIndexes");
+            modelBuilder.Entity<LensCoatingEntity>().ToTable("LensCoatings");
+            modelBuilder.Entity<LensTintEntity>().ToTable("LensTints");
 
 
 
@@ -43,6 +49,12 @@ namespace OpticalsWholesaleandRetail.Models.Entity
         public DbSet<FrameSizeEntity> fSizeEntity { get; set; }
         public DbSet<FrameCategoryEntity> fCategoryEntities { get; set; }
         public DbSet<FrameEntity> frameEntities { get; set; }
+        public DbSet<LensTypeEntity> LTypeEntities { get; set; }
+        public DbSet<LensCategoryEntity> LCategoryEntity { get; set; }
+        public DbSet<LensMaterialEntity> LMaterialEntity { get; set; }
+        public DbSet<LensCoatingEntity> LCoatingEntity { get; set; }
+        public DbSet<LensIndexEntity> LIndexEntities { get; set; }
+        public DbSet<LensTintEntity> LTintEntities { get; set; }
 
 
         //public void CreateDynamicTable(string tableName, List<string> subjects)

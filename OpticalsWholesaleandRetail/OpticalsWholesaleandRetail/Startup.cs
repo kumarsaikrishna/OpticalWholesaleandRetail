@@ -1,4 +1,4 @@
-using OpticalsWholesaleandRetail.DAL;
+﻿using OpticalsWholesaleandRetail.DAL;
 using OpticalsWholesaleandRetail.Models.Entity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -10,6 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace OpticalsWholesaleandRetail
 {
@@ -25,69 +29,102 @@ namespace OpticalsWholesaleandRetail
         // SERVICES
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                })
-                .AddRazorRuntimeCompilation();
+            services.AddControllers();
 
+            // ✅ DB
             services.AddDbContext<MyDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("MyConnection")),
-                ServiceLifetime.Transient);
+                options.UseSqlServer(Configuration.GetConnectionString("MyConnection")));
 
-            services.AddRazorPages();
-            services.AddCors();
+            // ✅ JWT CONFIG
+            var key = Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]);
 
-            double sessionTimeout = Convert.ToDouble(Configuration["sessionTimeOut"]);
-
-            services.AddSession(options =>
+            services.AddAuthentication(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(sessionTimeout);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
             });
 
-            services.AddHttpContextAccessor();
-            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            // ✅ Swagger with JWT
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Optical API", Version = "v1" });
 
-            // Repository
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter 'Bearer TOKEN'"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[] {}
+            }
+        });
+            });
+
+            // ✅ CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder => builder.AllowAnyOrigin()
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader());
+            });
+
+            // ✅ Repos
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<IFramesRepo, FramesRepo>();
-
-            // Authentication
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/Authenticate/Login";
-                    options.AccessDeniedPath = "/Authenticate/Login";
-                });
+            services.AddScoped<ILensRepo, LensRepo>();
         }
 
-        // PIPELINE
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (!env.IsDevelopment())
+            if (env.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
-
-            app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
-            app.UseSession();
+            app.UseCors("AllowAll");
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Authenticate}/{action=Login}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

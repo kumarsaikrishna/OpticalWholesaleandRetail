@@ -1,0 +1,148 @@
+﻿@model IEnumerable<OpticalsWholesaleandRetail.Models.DTO.LensTypeDto>
+
+<div class="container mt-4">
+
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between">
+
+            <h4>Lens Types</h4>
+
+            <button class="btn btn-primary" onclick="openModal()">Add</button>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Type</th>
+                        <th>Supplier</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @{ int i = 1; }
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@item.TypeName</td>
+                            <td>@item.SupplierName</td>
+                            <td>
+
+                                <button class="btn btn-sm btn-primary"
+                                        onclick="edit(@item.LensTypeId,'@item.TypeName','@item.SupplierId')">
+
+                                    Edit
+
+                                </button>
+
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="del(@item.LensTypeId)">
+
+                                    Delete
+
+                                </button>
+
+                            </td>
+                        </tr>
+
+                        i++;
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+
+<div class="modal fade" id="modal">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form id="form">
+
+                <input type="hidden" name="LensTypeId" id="id" />
+
+                <div class="modal-header">
+                    <h5>Lens Type</h5>
+                </div>
+
+                <div class="modal-body">
+
+                    <label>Type Name</label>
+                    <input type="text" name="TypeName" id="name" class="form-control" />
+
+                    <label class="mt-2">Supplier</label>
+                    <select name="SupplierId" id="supplier" class="form-control">
+
+                        <option value="">Select</option>
+
+                        @foreach (var s in ViewBag.Supplier)
+                        {
+                            <option value="@s.SupplierId">@s.ContactPerson</option>
+                        }
+
+                    </select>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-success">Save</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+function openModal(){
+$('#form')[0].reset();
+$('#id').val('');
+$('#modal').modal('show');
+}
+
+function edit(id,name,supplier){
+$('#id').val(id);
+$('#name').val(name);
+$('#supplier').val(supplier);
+$('#modal').modal('show');
+}
+
+$('#form').submit(function(e){
+
+e.preventDefault();
+
+var url = $('#id').val() ? '/LensType/Update' : '/LensType/Add';
+
+$.post(url,$(this).serialize(),function(res){
+if(res.success) location.reload();
+});
+
+});
+
+function del(id){
+if(confirm('Delete?')){
+$.post('/LensType/Delete/'+id,function(){
+location.reload();
+});
+}
+}
+
+</script>
